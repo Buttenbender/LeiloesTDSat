@@ -1,12 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+import javax.swing.JOptionPane;
 
-/**
- *
- * @author Adm
- */
 public class cadastroVIEW extends javax.swing.JFrame {
 
     /**
@@ -140,17 +133,38 @@ public class cadastroVIEW extends javax.swing.JFrame {
     }//GEN-LAST:event_cadastroNomeActionPerformed
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
-        ProdutosDTO produto = new ProdutosDTO();
-        String nome = cadastroNome.getText();
-        String valor = cadastroValor.getText();
-        String status = "A Venda";
-        produto.setNome(nome);
-        produto.setValor(Integer.parseInt(valor));
-        produto.setStatus(status);
-        
-        ProdutosDAO produtodao = new ProdutosDAO();
-        produtodao.cadastrarProduto(produto);
-        
+        try {
+            ProdutosDTO produto = new ProdutosDTO();
+            String nome = cadastroNome.getText().trim();
+            String valorStr = cadastroValor.getText().trim();
+            String status = "A Venda";
+            
+            if (nome.isEmpty() || valorStr.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Nome e valor não podem estar vazios", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            int valor;
+            try {
+                valor = Integer.parseInt(valorStr);
+            }
+            catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Valor deve ser um número inteiro", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            produto.setNome(nome);
+            produto.setValor(valor);
+            produto.setStatus(status);
+            
+            ProdutosDAO produtosDAO = new ProdutosDAO();
+            produtosDAO.cadastrarProduto(produto);
+            
+            JOptionPane.showMessageDialog(this, "Produto cadastrado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        }
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao cadastrar produto: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnCadastrarActionPerformed
 
     private void btnProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProdutosActionPerformed
